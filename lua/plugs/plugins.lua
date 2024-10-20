@@ -78,12 +78,7 @@ return {
 	},
 
 	--------------------------------------------------------------
-
-	{
-		"L3MON4D3/LuaSnip",
-		version = "2.*",
-		build = "make install_jsregexp"
-	},
+	
 	{
 		"williamboman/mason.nvim",
 		dependencies = {
@@ -92,12 +87,6 @@ return {
 		},
 		config = function()
 			return require('plugs.lsp.mason')
-		end,
-	},
-	{
-		"hrsh7th/nvim-cmp",
-		config = function()
-			return require('plugs.lsp.cmp')
 		end,
 	},
 	{
@@ -111,5 +100,45 @@ return {
 		config = function()
 			return require('plugs.lsp.lsp-zero')
 		end,
-	}
+	},
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    lazy = true,
+    dependencies = {
+      {
+        "L3MON4D3/LuaSnip",
+        lazy = true,
+        dependencies = "rafamadriz/friendly-snippets",
+        config = function()
+          require("plugs.lsp.luasnip")
+        end,
+      },
+      {
+        "windwp/nvim-autopairs",
+        opts = {
+          fast_wrap = {},
+          disable_filetype = { "TelescopePrompt", "vim" },
+        },
+        event = "InsertEnter",
+        lazy = true,
+        config = function(_, opts)
+          require("nvim-autopairs").setup(opts)
+
+          local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+          require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+        end,
+      },
+      {
+        "saadparwaiz1/cmp_luasnip",
+        "hrsh7th/cmp-nvim-lua",
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+      },
+    },
+    config = function()
+      require("plugs.lsp.cmp")
+    end,
+  },
 }

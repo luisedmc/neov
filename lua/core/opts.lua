@@ -4,6 +4,7 @@ local g = vim.g
 
 g.mapleader = ' '
 g.maplocalleader = ' '
+g.netrw_winsize = 25  -- Set Lexplore window size to 25% of the screen width
 
 opt.mouse = 'a'
 opt.ignorecase = true

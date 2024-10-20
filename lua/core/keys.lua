@@ -36,3 +36,18 @@ vim.keymap.set('n', '<leader>e', '<cmd>Lexplore<CR>')
 
 -- Show diagnostic message
 vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<cr>')
+
+-- New keymaps for switching buffers with Ctrl + number
+for i = 1, 9 do
+  vim.keymap.set('n', string.format('<C-%d>', i), function()
+      local bufs = vim.tbl_filter(function(buf)
+          return vim.api.nvim_buf_is_valid(buf)
+              and vim.bo[buf].buflisted
+              and vim.api.nvim_buf_get_name(buf) ~= ''
+      end, vim.api.nvim_list_bufs())
+      
+      if i <= #bufs then
+          vim.api.nvim_set_current_buf(bufs[i])
+      end
+  end, opts)
+end

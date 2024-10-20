@@ -1,4 +1,4 @@
-require "plugs.configs.toggleterm".setup {
+require "toggleterm".setup {
   size = 13,
   shading_factor = '-27',
   open_mapping = [[<c-`>]],
@@ -13,5 +13,23 @@ require "plugs.configs.toggleterm".setup {
   winbar = {
     enabled = false,
   },
-close_on_exit = true,
+  close_on_exit = true,
 }
+-- {
+-- 	"akinsho/toggleterm.nvim",
+-- 	cmd = { "ToggleTerm", "TermExec" },
+-- 	keys = {
+-- 		{
+-- 			mode = { "n", "t", "v" },
+-- 			[[<C-`>]],
+-- 			"<cmd>ToggleTerm size=10 direction=horizontal<cr>",
+-- 			{ desc = "Toggle Terminal" },
+-- 		},
+-- 	},
+-- 	version = "*",
+-- 	opts = {
+-- 		shading_factor = 0.2,
+-- 		highlights = { NormalFloat = { link = "NormalFloat" } },
+-- 		float_opts = { border = "none" },
+-- 	},
+-- },

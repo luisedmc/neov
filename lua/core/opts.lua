@@ -28,4 +28,3 @@ opt.autoindent = true
 opt.background = 'dark'
 vim.o.showmode = false
 opt.fillchars:append { eob = " " }
-

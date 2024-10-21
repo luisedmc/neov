@@ -5,7 +5,7 @@ function get_file_component()
 		file = "[no name]"
 	end
 
-	if string.match(file, "NvimTree") then
+	if string.match(file, "Lexplore") then
 		file = ""
 	end
 

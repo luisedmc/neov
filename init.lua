@@ -1,5 +1,3 @@
 require("core")
 require("plugs")
 require("ui")
--- require("ui.statusline")
--- require("ui.bufferline")

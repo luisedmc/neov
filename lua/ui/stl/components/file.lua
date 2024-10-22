@@ -2,7 +2,7 @@ function get_file_component()
 	local file = vim.fn.expand("%:t")
 
 	if file == "" then
-		file = "[no name]"
+		file = "no name"
 	end
 
 	if string.match(file, "Lexplore") then
@@ -11,3 +11,4 @@ function get_file_component()
 
 	return file
 end
+

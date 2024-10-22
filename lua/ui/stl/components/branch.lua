@@ -1,9 +1,11 @@
 function get_branch_component()
-	if not vim.g.loaded_fugitive then
-		return ""
+	if not vim.b.gitsigns_head or vim.b.gitsigns_git_status then
+		return "no branch"
 	end
 
-	local branch = vim.fn.FugitiveHead(10)
+	local git_status = vim.b.gitsigns_status_dict
+
+	local branch = git_status.head
 
 	if branch ~= "" then
 		if string.len(branch) > 15 then
@@ -13,5 +15,5 @@ function get_branch_component()
 		return " " .. branch
 	end
 
-	return " No branch"
+	return " no branch"
 end

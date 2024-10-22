@@ -64,13 +64,16 @@ return {
 		end
 	},
 	{
-    "lewis6991/gitsigns.nvim",
-    lazy = true,
-    event = { "BufRead" },
-    config = function()
-      require("plugs.ui.gitsigns")
-    end
-  },
+		"tpope/vim-fugitive",
+	},
+	{
+		"lewis6991/gitsigns.nvim",
+		lazy = true,
+		event = { "BufRead" },
+		config = function()
+			require("plugs.ui.gitsigns")
+		end
+	},
 	{
 		'xiyaowong/transparent.nvim',
 		lazy = false,

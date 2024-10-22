@@ -1,21 +1,35 @@
 require('plugs.strap')
 require("lazy").setup({
-  spec = {
-    -- import your plugins
-     { import = "plugs.plugins" },
-  },
+	spec = {
+		-- import your plugins
+		{ import = "plugs.plugins" },
+	},
 
-  ui = {
+	ui = {
+		size = { width = 0.8, height = 0.8 },
 		backdrop = 100,
 		icons = {
+			cmd = " ",
+			config = "",
+			event = "",
 			ft = "",
+			init = " ",
+			import = " ",
+			keys = " ",
 			lazy = "󰂠 ",
 			loaded = "",
 			not_loaded = "",
+			plugin = " ",
+			runtime = " ",
+			source = " ",
+			start = "",
+			task = "✔ ",
+			list = { "●", "➜", "★", "‒" },
 		},
+		throttle = 20,
 	},
 
-  performance = {
+	performance = {
 		rtp = {
 			disabled_plugins = {
 				"2html_plugin",
@@ -48,8 +62,6 @@ require("lazy").setup({
 			},
 		},
 	},
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { "monochrome" } },
-  checker = { enabled = true },
+
+	install = { colorscheme = { "monochrome" } },
 })

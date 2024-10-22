@@ -4,7 +4,13 @@ local g = vim.g
 
 g.mapleader = ' '
 g.maplocalleader = ' '
-g.netrw_winsize = 25  -- Set Lexplore window size to 25% of the screen width
+
+g.netrw_winsize = 25
+g.netrw_banner = 0
+g.netrw_liststyle = 3
+g.netrw_browse_split = 0
+g.netrw_bufsettings = 'number relativenumber'
+g.netrw_list_hide = '^\\.\\(\\.\\|git\\)$'
 
 opt.mouse = 'a'
 opt.ignorecase = true

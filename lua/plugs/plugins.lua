@@ -21,6 +21,7 @@ return {
 			return require("plugs.configs.devicons")
 		end,
 	},
+	{ 'prichrd/netrw.nvim', opts = {} },
 	{
 		'nvim-treesitter/nvim-treesitter',
 		run = ":TSUpdate",

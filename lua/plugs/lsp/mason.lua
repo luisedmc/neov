@@ -28,7 +28,7 @@ mason.setup({
 })
 
 mason_lspconfig.setup({
-	ensure_installed = { "ts_ls", "lua_ls" },
+	ensure_installed = { "ts_ls", "lua_ls", "gopls", "clangd", "pyright" },
 	handlers = {
 		function(server_name)
 			-- TS server will be handled by typescript-tools.nvim
@@ -44,9 +44,5 @@ mason_lspconfig.setup({
 })
 
 mason_tool_installer.setup({
-	ensure_installed = {
-		"stylua",
-		"prettierd",
-		"eslint_d",
-	},
+	ensure_installed = { "stylua", "rust-analyzer", "pylint" },
 })

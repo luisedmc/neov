@@ -1,4 +1,4 @@
-<h1 align="center">moon</h1>
+<h1 align="center">blue</h1>
 
 ![Dashboard](.github/dashboard.png)
 ![Editor](.github/nvim.png)

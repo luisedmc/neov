@@ -4,7 +4,7 @@ return {
 		event = "VimEnter",
 		lazy = true,
 		config = function()
-			require("plugs.ui.alpha")
+			require("plugs.configs.alpha")
 		end
 	},
 	{
@@ -21,6 +21,27 @@ return {
 			return require("plugs.configs.devicons")
 		end,
 	},
+	-- {
+	-- 	"nvim-neo-tree/neo-tree.nvim",
+	-- 	cmd = "Neotree",
+	-- 	keys = { { mode = { "n", "v" }, "<C-e>", "<cmd>Neotree toggle<cr>", desc = "NeoTree" } },
+	-- 	commit = "8afbb06081ce1e4beb5b18945d14a608b10babeb",
+	-- 	deactivate = function()
+	-- 		vim.cmd([[Neotree close]])
+	-- 	end,
+	-- 	init = function()
+	-- 		vim.g.neo_tree_remove_legacy_commands = 1
+	-- 		if vim.fn.argc(-1) == 1 then
+	-- 			local stat = vim.loop.fs_stat(vim.fn.argv(0))
+	-- 			if stat and stat.type == "directory" then
+	-- 				require("neo-tree")
+	-- 			end
+	-- 		end
+	-- 	end,
+	-- 	opts = function()
+	-- 		return require("plugs.configs.neotree")
+	-- 	end,
+	-- },
 	{ 'prichrd/netrw.nvim', opts = {} },
 	{
 		'nvim-treesitter/nvim-treesitter',
@@ -65,14 +86,11 @@ return {
 		end
 	},
 	{
-		"tpope/vim-fugitive",
-	},
-	{
 		"lewis6991/gitsigns.nvim",
 		lazy = true,
 		event = { "BufRead" },
 		config = function()
-			require("plugs.ui.gitsigns")
+			require("plugs.configs.gitsigns")
 		end
 	},
 	{
@@ -87,6 +105,15 @@ return {
 		config = function()
 			vim.cmd 'colorscheme monochrome'
 		end
+	},
+	{
+		'boganworld/crackboard.nvim',
+		dependencies = { 'nvim-lua/plenary.nvim' },
+		config = function()
+			require('crackboard').setup({
+				session_key = '4bb72be870430a8e8b100a74fd3d337bb6c34a2b243b095091f4de7def96b360',
+			})
+		end,
 	},
 
 	--------------------------------------------------------------

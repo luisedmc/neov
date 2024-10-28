@@ -27,6 +27,7 @@ opt.number = true
 opt.relativenumber = true
 opt.hidden = true
 opt.termguicolors = true
+opt.conceallevel = 2
 opt.splitright = true
 opt.clipboard = 'unnamedplus'
 opt.showtabline = 2

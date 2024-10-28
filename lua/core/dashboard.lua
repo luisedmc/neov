@@ -39,9 +39,7 @@ M.dashboard = {
 		{ "え   Recent Files", "<Leader>fr" },
 		{ "そ   Live Grep", "<Leader>fp" },
 	},
-	message = {
-		--"[ ━━━━━━ ❖  ━━━━━━ ]",
-	},
+	message = {},
 	footer = {
 		"Loaded " .. stats.count .. " plugins",
 	}

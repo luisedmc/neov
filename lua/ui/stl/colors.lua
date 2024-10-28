@@ -11,4 +11,3 @@ highlight("StatusErrors", "#ff9898", "NONE", "NONE")
 highlight("StatusInfos", "#89B4FA", "NONE", "NONE")
 
 highlight("BranchComponentStatus", "#444444", "NONE", "NONE")
-

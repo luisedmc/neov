@@ -21,9 +21,8 @@ local buttons = {
 	{
 		"  Configuration",
 		"󱁐 c",
-		[[<cmd>lua require('telescope.builtin').find_files({ cwd = vim.fn.stdpath("config") })<cr>]],
+		[[lua require('telescope.builtin').find_files({ cwd = vim.fn.stdpath("config") })]],
 	},
-
 	{ "󰒲  Lazy", "󱁐 pS", "Lazy show" },
 	{ "  Quit", "󱁐 q", "q" },
 }
@@ -106,7 +105,7 @@ local function generate_content(win_width, win_height)
 	button_lines = {}
 
 	-- Calculate total content height (logo + buttons + spacing)
-	local total_content_height = #logo + 1 + (#buttons * 2) -- logo + 1 space + buttons with spacing
+	local total_content_height = #logo + 5 + (#buttons * 2) -- logo + 1 space + buttons with spacing
 
 	-- Calculate vertical centering
 	local vertical_offset = math.max(0, math.floor((win_height - total_content_height) / 2))
@@ -122,7 +121,9 @@ local function generate_content(win_width, win_height)
 	end
 
 	-- Add spacing after logo
-	table.insert(content, "")
+	for _ = 1, 5 do
+		table.insert(content, "")
+	end
 
 	-- Add buttons and track their line numbers
 	for i, btn in ipairs(buttons) do

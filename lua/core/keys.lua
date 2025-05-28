@@ -19,6 +19,9 @@ map("n", "<leader>t", "<cmd>enew<cr>")
 map("n", "<C-/>", "<plug>(comment_toggle_linewise_current)")
 map("v", "<C-/>", "<plug>(comment_toggle_linewise_visual)")
 
+-- esc -> qq
+map({ "i", "v" }, "qq", "<esc>")
+
 -- keep cursor centered when scrolling
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")

@@ -87,46 +87,35 @@ require("lazy").setup({
 
 		{
 			"saghen/blink.cmp",
-			dependencies = { "rafamadriz/friendly-snippets" },
-			version = "1.*",
+			event = { "InsertEnter", "BufReadPost" },
+			-- dependencies = { "rafamadriz/friendly-snippets" },
+			dependencies = { "L3MON4D3/LuaSnip", version = "v2.*" },
 			build = "nix run .#build-plugin",
-
-			---@module 'blink.cmp'
-			---@type blink.cmp.Config
 			opts = {
 				keymap = { preset = "default" },
-
+				snippets = { preset = "luasnip" },
 				appearance = {
 					nerd_font_variant = "mono",
 				},
 
-				cmdline = {
-					completion = {
-						list = {
-							selection = {
-								preselect = false,
-							},
-						},
-						menu = {
-							auto_show = true,
-						},
-						ghost_text = {
-							enabled = true,
-						},
-					},
-				},
-
 				completion = {
+					accept = { auto_brackets = { enabled = true } },
+					list = { selection = { preselect = true, auto_insert = true } },
 					menu = {
-						direction_priority = { "n", "s" },
+						border = "rounded",
 						draw = {
-							treesitter = { "lsp" },
+							gap = 2,
 						},
 					},
-					documentation = { auto_show = true },
+					documentation = {
+						auto_show = true,
+						auto_show_delay_ms = 200,
+						window = {
+							border = "rounded",
+						},
+					},
 					ghost_text = { enabled = true },
 				},
-
 				sources = {
 					default = { "lsp", "path", "snippets", "buffer" },
 					providers = {
@@ -177,8 +166,7 @@ require("lazy").setup({
 		{
 			"neovim/nvim-lspconfig",
 			dependencies = { "saghen/blink.cmp" },
-
-			-- example using `opts` for defining servers
+			event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 			opts = {
 				servers = {
 					lua_ls = {},
@@ -193,8 +181,8 @@ require("lazy").setup({
 					underline = true,
 					update_in_insert = false,
 					severity_sort = true,
-					-- signs = { text = { [1] = "", [2] = "", [3] = "", [4] = "󰌶" } },
-					signs = { text = { [1] = "", [2] = "", [3] = "", [4] = "󰌶" } },
+					signs = { text = { [1] = "", [2] = "", [3] = "", [4] = "󰌶" } },
+					-- signs = { text = { [1] = "", [2] = "", [3] = "", [4] = "󰌶" } },
 					float = {
 						suffix = "",
 						header = { "  Diagnostics", "String" },

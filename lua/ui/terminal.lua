@@ -1,7 +1,6 @@
 local terminal_win = nil
 local terminal_buf = nil
 local terminal_width = nil -- Store the terminal width
-
 function ToggleTerminal()
 	-- Check if terminal window exists and is valid
 	if terminal_win and api.nvim_win_is_valid(terminal_win) then

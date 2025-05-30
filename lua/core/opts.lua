@@ -11,6 +11,7 @@ opt.writebackup = false
 opt.breakindent = true
 opt.cursorline = true
 opt.clipboard = "unnamedplus"
+vim.opt.encoding = "utf-8"
 opt.expandtab = false
 opt.fillchars = {
 	eob = " ",

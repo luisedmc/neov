@@ -8,6 +8,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	spec = {
+		{ "nvim-tree/nvim-web-devicons", opts = {} },
 		{
 			"tiesen243/vercel.nvim",
 			priority = 1000,

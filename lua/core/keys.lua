@@ -26,6 +26,9 @@ map({ "i", "v" }, "qq", "<esc>")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
 
+-- lsp
+map({ "n", "v" }, "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>") -- code actions
+
 -- indent/outdent in visual mode with Tab / Shift-Tab
 map("v", "<Tab>", ">gv")
 map("v", "<S-Tab>", "<gv")
@@ -36,16 +39,28 @@ map("n", "<leader>fp", "<cmd>Telescope live_grep<cr>")
 
 -- toggle terminal
 map("n", "<C-`>", ToggleTerminal)
-map("t", "<C-`>", [[<C-\><C-n>:lua ToggleTerminal()<CR>]])
+map("t", "<C-`>", [[<C-\><C-n>:lua ToggleTerminal()<cr>]])
 
 -- toggle diagnostics in-line
 map("n", "<C-j>", function()
 	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-end, { silent = true, noremap = true })
+end)
 
 -- window resize
-map({ "n", "t" }, "<C-h>", "<C-w>5<")
-map({ "n", "t" }, "<C-l>", "<C-w>5>")
+map({ "n", "t" }, "<C-[>", "<C-w>5<") -- increase by 5
+map({ "n", "t" }, "<C-]>", "<C-w>5>")
+
+map({ "n", "v" }, "<leader>wv", "<C-w>v")         -- vertical split
+map({ "n", "v" }, "<leader>wh", "<C-w>s")         -- horiz split
+map({ "n", "v" }, "<leader>we", "<C-w>=")         -- splits equal
+map({ "n", "v" }, "<leader>wq", "<cmd>close<cr>") -- close
+
+map({ "n", "t" }, "<C-h>", "<C-w>h")              -- move cursor left buf
+map({ "n", "t" }, "<C-j>", "<C-w>j")              -- move cursor down buf
+map({ "n", "t" }, "<C-k>", "<C-w>k")              -- move cursor up buf
+map({ "n", "t" }, "<C-l>", "<C-w>l")              -- move cursor right buf
+
+map("t", "<esc>", [[<C-\><C-n>]])
 
 -- change buffer with <C-1,9>
 for i = 1, 9 do

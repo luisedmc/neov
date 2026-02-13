@@ -117,9 +117,7 @@ M.setup = function()
 		vim.o.tabline = '%!v:lua.require("ui.buf").getTabline()'
 	end
 end
-vim.cmd([[
-nnoremap <silent><TAB> :BufflineNext<CR>
-nnoremap <silent><S-TAB> :BufflinePrev<CR>
-]])
+vim.keymap.set("n", "<TAB>", "<cmd>BufflineNext<CR>", { silent = true })
+vim.keymap.set("n", "<S-TAB>", "<cmd>BufflinePrev<CR>", { silent = true })
 
 return M

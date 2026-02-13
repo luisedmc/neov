@@ -1,6 +1,6 @@
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
 	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end
@@ -182,13 +182,19 @@ require("lazy").setup({
 					underline = true,
 					update_in_insert = false,
 					severity_sort = true,
-					signs = { text = { [1] = "", [2] = "", [3] = "", [4] = "󰌶" } },
-					-- signs = { text = { [1] = "", [2] = "", [3] = "", [4] = "󰌶" } },
+					signs = {
+						text = {
+							[vim.diagnostic.severity.ERROR] = "",
+							[vim.diagnostic.severity.WARN] = "",
+							[vim.diagnostic.severity.INFO] = "",
+							[vim.diagnostic.severity.HINT] = "󰌶",
+						},
+					},
 					float = {
 						suffix = "",
-						header = { "  Diagnostics", "String" },
+						header = { "  Diagnostics", "String" },
 						prefix = function(_, _, _)
-							return "  ", "String"
+							return "  ", "String"
 						end,
 					},
 				})

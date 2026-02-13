@@ -25,11 +25,18 @@ function status_line()
 	})
 end
 
-vim.cmd([[
-  augroup Statusline
-    au!
-    au WinEnter,BufEnter * setlocal statusline=%!v:lua.status_line()
-    au WinLeave,BufLeave * setlocal statusline=%!v:lua.status_line()
-    au WinEnter,BufEnter,FileType NvimTree setlocal statusline=%!v:lua.status_line()
-  augroup END
-]])
+local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "WinLeave", "BufLeave" }, {
+	group = group,
+	pattern = "*",
+	callback = function()
+		vim.wo.statusline = "%!v:lua.status_line()"
+	end,
+})
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "FileType" }, {
+	group = group,
+	pattern = "NvimTree",
+	callback = function()
+		vim.wo.statusline = "%!v:lua.status_line()"
+	end,
+})

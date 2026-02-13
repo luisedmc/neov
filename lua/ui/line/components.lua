@@ -14,17 +14,24 @@ function get_component_separator()
 end
 
 -- colors
-local function highlight(tag, foreground, background, style)
-	vim.cmd("highlight " .. tag .. " guifg=" .. foreground .. " guibg=" .. background .. " gui=" .. style)
+local function set_hl(name, fg, opts)
+	local hl = { fg = fg }
+	if opts then
+		for k, v in pairs(opts) do
+			hl[k] = v
+		end
+	end
+	vim.api.nvim_set_hl(0, name, hl)
 end
-highlight("StatusMode", "#000000", "NONE", "bold")
-highlight("StatusBranch", "#ffffff", "NONE", "NONE")
-highlight("StatusFile", "#444444", "NONE", "NONE")
-highlight("StatusSaved", "#adb5bd", "NONE", "NONE")
-highlight("StatusWarnings", "#f0c674", "NONE", "NONE")
-highlight("StatusErrors", "#ff9898", "NONE", "NONE")
-highlight("StatusInfos", "#89B4FA", "NONE", "NONE")
-highlight("BranchComponentStatus", "#444444", "NONE", "NONE")
+
+set_hl("StatusMode", "#000000", { bold = true })
+set_hl("StatusBranch", "#ffffff")
+set_hl("StatusFile", "#444444")
+set_hl("StatusSaved", "#adb5bd")
+set_hl("StatusWarnings", "#f0c674")
+set_hl("StatusErrors", "#ff9898")
+set_hl("StatusInfos", "#89B4FA")
+set_hl("BranchComponentStatus", "#444444")
 
 -- branch
 function get_branch_component()
@@ -41,10 +48,10 @@ function get_branch_component()
 			branch = branch:sub(1, 15) .. "..."
 		end
 
-		return " " .. branch
+		return " " .. branch
 	end
 
-	return " no branch"
+	return " no branch"
 end
 
 -- diagnostics
@@ -107,7 +114,7 @@ end
 function get_lsp_client()
 	local buf_clients = vim.lsp.get_clients({ bufnr = 0 })
 	if #buf_clients == 0 then
-		return ""
+		return ""
 	end
 
 	local buf_client_names = {}
@@ -120,7 +127,7 @@ function get_lsp_client()
 	if #buf_client_names > 0 then
 		return table.concat(buf_client_names, ", ")
 	else
-		return ""
+		return ""
 	end
 end
 
@@ -132,56 +139,21 @@ api.nvim_set_hl(0, "ModeReplace", { fg = "#DF5B61", bold = true })  -- red
 api.nvim_set_hl(0, "ModeCommand", { fg = "#CBA6F7", bold = true })  -- purple
 api.nvim_set_hl(0, "ModeTerminal", { fg = "#94E2D5", bold = true }) -- cyan
 api.nvim_set_hl(0, "ModeOther", { fg = "#A6ADC8", bold = true })    -- gray
--- local function get_mode_group(mode)
--- 	local mode_symbols = {
--- 		["n"] = { "●", "ModeNormal" },
--- 		["niI"] = { "●", "ModeNormal" },
--- 		["niR"] = { "●", "ModeNormal" },
--- 		["niV"] = { "●", "ModeNormal" },
--- 		["no"] = { "●", "ModeNormal" },
--- 		["i"] = { "●", "ModeInsert" },
--- 		["ic"] = { "●", "ModeInsert" },
--- 		["ix"] = { "●", "ModeInsert" },
--- 		["v"] = { "●", "ModeVisual" },
--- 		["V"] = { "●", "ModeVisual" },
--- 		["Vs"] = { "●", "ModeVisual" },
--- 		["␖"] = { "●", "ModeVisual" }, -- Visual block
--- 		["R"] = { "●", "ModeReplace" },
--- 		["Rv"] = { "●", "ModeReplace" },
--- 		["s"] = { "●", "ModeOther" },
--- 		["S"] = { "●", "ModeOther" },
--- 		["␓"] = { "●", "ModeOther" }, -- Select block
--- 		["c"] = { "●", "ModeCommand" },
--- 		["cv"] = { "●", "ModeCommand" },
--- 		["ce"] = { "●", "ModeCommand" },
--- 		["r"] = { "●", "ModeOther" },
--- 		["rm"] = { "●", "ModeOther" },
--- 		["t"] = { "●", "ModeTerminal" },
--- 		["nt"] = { "●", "ModeTerminal" },
--- 	}
---
--- 	local entry = mode_symbols[mode]
--- 	if entry then
--- 		return "%#" .. entry[2] .. "#" .. entry[1] .. "%*"
--- 	else
--- 		return "%#ModeOther#●%*"
--- 	end
--- end
 
 local function get_mode_group(mode)
 	local groups = {
-		["n"] = " ",
+		["n"] = " ",
 		["niI"] = "NORMAL i",
 		["niR"] = "NORMAL r",
 		["niV"] = "NORMAL v",
 		["no"] = "N-PENDING",
-		["i"] = " ",
+		["i"] = " ",
 		["ic"] = "INSERT (completion)",
 		["ix"] = "INSERT completion",
 		["t"] = "TERMINAL",
 		["nt"] = "NTERMINAL",
-		["v"] = " ",
-		["V"] = " ",
+		["v"] = " ",
+		["V"] = " ",
 		["Vs"] = "V-LINE (Ctrl O)",
 		[""] = "V-BLOCK",
 		["R"] = "REPLACE",

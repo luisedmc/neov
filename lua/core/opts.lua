@@ -20,16 +20,13 @@ opt.fillchars = {
 }
 opt.fileencoding = "utf-8"
 opt.hlsearch = false
-opt.hid = true
 opt.history = 100
 opt.ignorecase = true
 opt.laststatus = 3
-opt.lazyredraw = true
 opt.list = false
 opt.mouse = "a"
 opt.number = true
 opt.relativenumber = true
-opt.termguicolors = true
 opt.nuw = 1
 opt.tabstop = 2
 opt.timeoutlen = 500

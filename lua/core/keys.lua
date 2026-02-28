@@ -51,6 +51,7 @@ end)
 -- documentation
 map("n", "gK", function() require("ui.docs.docs").open_doc() end)
 map("n", "<leader>fd", function() require("ui.docs.docs").search_docs() end)
+map("n", "<leader>fs", function() require("ui.docs.docs").show_symbol_signature() end)
 
 -- toggle terminal
 map("n", "<C-`>", toggle_terminal)

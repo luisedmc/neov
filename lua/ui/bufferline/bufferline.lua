@@ -10,7 +10,6 @@ function M.set_highlights()
   local active_bg = p.bg0
   local inactive_bg = pal.lighten(p.bg0, 8) or p.bg2
   local highlights = {
-    TabLineMinus = { fg = p.fg0, bg = p.red },
     TabLineTheme = { fg = p.blue, bg = p.bg0 },
     TabLinePlus = { fg = p.green, bg = p.bg0 },
     TabLineSave = { fg = p.bg4, bg = p.bg0 },
@@ -79,10 +78,6 @@ local function fit_text_width(text, width)
   return truncated .. ellipsis
 end
 
-function _G.QuitPlease()
-  vim.cmd("quit")
-end
-
 function _G.SavePlease()
   vim.cmd("w")
 end
@@ -149,10 +144,6 @@ M.modified = function(bufnr)
   return vim.fn.getbufvar(bufnr, "&modified") == 1 and "" or ""
 end
 
-M.rightButton = function()
-  return "%#TabLineMinus#%@v:lua.QuitPlease@  %#TabLineFill#"
-end
-
 M.rightButton2 = function()
   return "%#TabLineTheme#%@v:lua.CycleThemePreset@  %#TabLineFill#"
 end
@@ -212,7 +203,7 @@ M.bufferline = function()
   end
 
   line = line .. "%#TabLineFill#%="
-  line = line .. M.rightButton4() .. M.rightButton3() .. M.rightButton2() .. " %#111111#" .. M.rightButton()
+  line = line .. M.rightButton4() .. M.rightButton3() .. M.rightButton2()
 
   if vim.fn.tabpagenr("$") > 1 then
     line = line .. "%#TabLine#%999X"

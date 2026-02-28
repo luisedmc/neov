@@ -27,9 +27,18 @@ return {
 			-- Parser/query manager setup for the current nvim-treesitter API.
 			treesitter.setup()
 			if has_ui and opts.ensure_installed and #opts.ensure_installed > 0 then
-				local ok, task = pcall(treesitter.install, opts.ensure_installed, { summary = false })
-				if ok and task and opts.sync_install then
-					pcall(task.wait, task)
+				local installed = {}
+				for _, lang in ipairs(treesitter.get_installed()) do
+					installed[lang] = true
+				end
+				local missing = vim.tbl_filter(function(lang)
+					return not installed[lang]
+				end, opts.ensure_installed)
+				if #missing > 0 then
+					local ok, task = pcall(treesitter.install, missing, { summary = false })
+					if ok and task and opts.sync_install then
+						pcall(task.wait, task)
+					end
 				end
 			end
 

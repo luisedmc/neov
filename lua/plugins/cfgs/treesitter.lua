@@ -10,7 +10,6 @@ return {
 		"tsx",
 		"rust",
 		"php",
-		"blade",
 		"nix",
 		"json",
 		"html",

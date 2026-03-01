@@ -157,7 +157,7 @@ local function get_groups()
     Keyword = { link = "hlRed" },
     Exception = { link = "hlRed" },
     Identifier = { link = "hlBlue" },
-    Function = { link = "hlGreenBold" },
+    Function = { link = "hlBlueBold" },
     PreProc = { link = "hlAqua" },
     Include = { link = "hlAqua" },
     Define = { link = "hlAqua" },

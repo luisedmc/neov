@@ -1,6 +1,5 @@
 local M = {}
 
--- Each scheme uses a simple, flat format:
 --   name          string   unique identifier
 --   background    string   main editor background
 --   darker        string   darker variant (e.g. sidebar, terminal)
@@ -45,31 +44,39 @@ M.schemes = {
     color15 = "#e9edf2",
   },
   {
-    name = "yoru",
-    comment = "#3b3f50",
-    background = "#070707",
-    darker = "#131620",
-    black = "#070707",
-    foreground = "#c0caf5",
-    cursorline = "#171b24",
-    cursor = "#c0caf5",
-    orange = "#ff9e64",
-    color0 = "#292e42",
-    color1 = "#f7768e",
-    color2 = "#26da98",
-    color3 = "#e4a03a",
-    color4 = "#4f82f1",
-    color5 = "#844bee",
-    color6 = "#73daca",
-    color7 = "#a9b1d6",
-    color8 = "#3b4261",
-    color9 = "#f7768e",
-    color10 = "#26da98",
-    color11 = "#e4a03a",
-    color12 = "#4f82f1",
-    color13 = "#844bee",
-    color14 = "#73daca",
-    color15 = "#e0e0e0",
+    name = "gruber_darker",
+    comment = "#95a99f",
+    background = "#181818",
+    darker = "#101010",
+    black = "#181818",
+    foreground = "#f4f4ff",
+    cursorline = "#282828",
+    cursor = "#ffdd33",
+    orange = "#cc8c3c",
+    bg1 = "#141414",
+    bg2 = "#1e1e1e",
+    bg3 = "#252838",
+    bg4 = "#31364a",
+    fg1 = "#fcfcfc",
+    fg2 = "#e4e7f5",
+    fg3 = "#b8bdd3",
+    fg4 = "#6c7086",
+    color0 = "#1f1f1f",
+    color1 = "#f43841",
+    color2 = "#73c936",
+    color3 = "#ffdd33",
+    color4 = "#96a6c8",
+    color5 = "#9e95c7",
+    color6 = "#95a99f",
+    color7 = "#e4e4ef",
+    color8 = "#52494e",
+    color9 = "#ff4f58",
+    color10 = "#73c936",
+    color11 = "#ffdd33",
+    color12 = "#afc0e2",
+    color13 = "#b0a8d9",
+    color14 = "#9fb3a9",
+    color15 = "#f4f4ff",
   },
   {
     name = "radium",
@@ -100,7 +107,7 @@ M.schemes = {
   },
 }
 
-M.order = { "default", "yoru", "radium" }
+M.order = { "default", "gruber_darker", "radium" }
 
 ---@param name string
 ---@return table|nil

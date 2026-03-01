@@ -1,6 +1,7 @@
 local M = {}
 local utils = require("ui.statusline.utils")
 local pal = require("ui.colorschemes.palette")
+local refresh_au_setup = false
 
 local function esc(text)
   return tostring(text):gsub("%%", "%%%%")
@@ -100,6 +101,69 @@ local function get_window_width()
   return vim.o.columns
 end
 
+local function get_no_git_label(width)
+  if width >= 130 then
+    return "no git"
+  end
+  if width >= 95 then
+    return "nogit"
+  end
+  return "ng"
+end
+
+local function redraw_statusline()
+  vim.cmd("redrawstatus")
+end
+
+local function setup_refresh_autocmds()
+  if refresh_au_setup then
+    return
+  end
+  refresh_au_setup = true
+
+  local group = vim.api.nvim_create_augroup("StatuslineLiveRefresh", { clear = true })
+
+  vim.api.nvim_create_autocmd("User", {
+    group = group,
+    pattern = { "GitSignsUpdate", "GitSignsChanged" },
+    callback = function(args)
+      local bufnr = args and args.data and args.data.buffer
+      if bufnr and bufnr ~= vim.api.nvim_get_current_buf() then
+        return
+      end
+      redraw_statusline()
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+    group = group,
+    callback = redraw_statusline,
+  })
+end
+
+local function diff_totals_block(diff, _)
+  local added = tonumber(diff and diff.added) or 0
+  local changed = tonumber(diff and diff.changed) or 0
+  local removed = tonumber(diff and diff.removed) or 0
+
+  local out = { "%#StDiffTotalsBase# " }
+  local tokens = {
+    { "StDiffTotalsAdd", string.format("+%d", added) },
+    { "StDiffTotalsChange", string.format("~%d", changed) },
+    { "StDiffTotalsRemove", string.format("-%d", removed) },
+  }
+
+  for idx, token in ipairs(tokens) do
+    out[#out + 1] = string.format("%%#%s#%s", token[1], esc(token[2]))
+    if idx < #tokens then
+      out[#out + 1] = "%#StDiffTotalsBase# "
+    end
+  end
+
+  out[#out + 1] = "%#StDiffTotalsBase# "
+  return table.concat(out)
+end
+
 function M.set_highlights()
   local p = pal.get()
   local lighten = pal.lighten
@@ -118,6 +182,7 @@ function M.set_highlights()
     orange = p.orange,
     gray = p.gray,
   }
+  local diff_totals_bg = colors.bg
 
   local highlights = {
     StBase = { bg = colors.bg, fg = colors.text },
@@ -138,6 +203,10 @@ function M.set_highlights()
     StDiffChangeInfo = { bg = lighten(colors.yellow, 12, colors.yellow), fg = colors.bg },
     StDiffRemoveIcon = { bg = colors.red, fg = colors.bg },
     StDiffRemoveInfo = { bg = lighten(colors.red, 12, colors.red), fg = colors.bg },
+    StDiffTotalsBase = { bg = diff_totals_bg, fg = colors.text },
+    StDiffTotalsAdd = { bg = diff_totals_bg, fg = colors.green },
+    StDiffTotalsChange = { bg = diff_totals_bg, fg = colors.yellow },
+    StDiffTotalsRemove = { bg = diff_totals_bg, fg = colors.red },
 
     StLspOnIcon = { bg = colors.green, fg = colors.bg },
     StLspOnInfo = { bg = lighten(colors.green, 12, colors.green), fg = colors.bg },
@@ -183,22 +252,11 @@ function StatusLine()
   if in_git then
     local branch_width = width >= 140 and 22 or 14
     add_block(left, icon_info_block("StGitIcon", "StGitInfo", git_icon, str_truncate(branch_data[2], branch_width)))
-  elseif width >= 130 then
-    add_block(left, icon_info_block("StGitOffIcon", "StGitOffInfo", git_icon, "no git"))
+  else
+    add_block(left, icon_info_block("StGitOffIcon", "StGitOffInfo", git_icon, get_no_git_label(width)))
   end
 
-  if in_git and width >= 120 then
-    local diff = utils.get_git_diff()
-    if diff.added > 0 then
-      add_block(left, icon_info_block("StDiffAddIcon", "StDiffAddInfo", "+", diff.added))
-    end
-    if diff.changed > 0 then
-      add_block(left, icon_info_block("StDiffChangeIcon", "StDiffChangeInfo", "~", diff.changed))
-    end
-    if diff.removed > 0 then
-      add_block(left, icon_info_block("StDiffRemoveIcon", "StDiffRemoveInfo", "-", diff.removed))
-    end
-  end
+  add_block(left, diff_totals_block(utils.get_git_diff(), width))
 
   local lsp_data = utils.get_lsp_status()
   if width >= 90 then
@@ -206,7 +264,7 @@ function StatusLine()
     add_block(right, icon_info_block(lsp_data[3], lsp_data[4], lsp_data[1], str_truncate(lsp_data[2], lsp_width)))
   end
 
-  add_block(right, icon_info_block("StPosIcon", "StPosInfo", "", utils.get_line_total()))
+  add_block(right, icon_info_block("StPosIcon", "StPosInfo", "", utils.get_line_total()))
 
   local left_side = join_blocks(left)
   local right_side = join_blocks(right)
@@ -221,6 +279,8 @@ end
 M.set_highlights()
 
 function M.init(x)
+  setup_refresh_autocmds()
+
   local pos = x or "bottom"
   if pos == "top" then
     vim.opt.ls = 0
@@ -231,6 +291,8 @@ function M.init(x)
   else
     error("chose 'top' or 'bottom'", 2)
   end
+
+  vim.schedule(redraw_statusline)
 end
 
 return M

@@ -118,6 +118,23 @@ local function notify_missing_servers()
 	end)
 end
 
+local function get_position_encoding(bufnr, method)
+	local clients = vim.lsp.get_clients({ bufnr = bufnr, method = method })
+	if #clients == 0 then
+		clients = vim.lsp.get_clients({ bufnr = bufnr })
+	end
+
+	local client = clients[1]
+	if client and type(client.offset_encoding) == "string" and client.offset_encoding ~= "" then
+		return client.offset_encoding
+	end
+	if client and type(client.position_encoding) == "string" and client.position_encoding ~= "" then
+		return client.position_encoding
+	end
+
+	return "utf-16"
+end
+
 local function rename()
 	local api = vim.api
 	local current_word = vim.fn.expand("<cword>")
@@ -159,7 +176,10 @@ local function rename()
 		api.nvim_buf_delete(buf, { force = true })
 
 		if #new_name > 0 and new_name ~= current_word then
-			local params = vim.lsp.util.make_position_params()
+			local params = vim.lsp.util.make_position_params(
+				0,
+				get_position_encoding(0, "textDocument/rename")
+			)
 			params.newName = new_name
 			vim.lsp.buf_request(0, "textDocument/rename", params)
 		end

@@ -2,8 +2,8 @@ local M = {}
 local api = vim.api
 
 local handlers = {
-  c       = { cmd = "man",  sections = { "2", "3", "1" }, ft = "man",  search = "man_pages", search_section = "2" },
-  cpp     = { cmd = "man",  sections = { "2", "3", "1" }, ft = "man",  search = "man_pages", search_section = "2" },
+  c       = { cmd = "man",  sections = { "2", "3", "1" }, ft = "man",  search = "man_pages", search_sections = { "3", "2", "1" } },
+  cpp     = { cmd = "man",  sections = { "2", "3", "1" }, ft = "man",  search = "man_pages", search_sections = { "3", "2", "1" } },
   sh      = { cmd = "man",  sections = { "1" },           ft = "man",  search = "man_pages", search_section = "1" },
   bash    = { cmd = "man",  sections = { "1" },           ft = "man",  search = "man_pages", search_section = "1" },
   zsh     = { cmd = "man",  sections = { "1" },           ft = "man",  search = "man_pages", search_section = "1" },
@@ -210,8 +210,25 @@ local function sorted_response_ids(responses)
   return ids
 end
 
+local function get_position_encoding(bufnr, method)
+  local clients = vim.lsp.get_clients({ bufnr = bufnr, method = method })
+  if #clients == 0 then
+    clients = vim.lsp.get_clients({ bufnr = bufnr })
+  end
+
+  local client = clients[1]
+  if client and type(client.offset_encoding) == "string" and client.offset_encoding ~= "" then
+    return client.offset_encoding
+  end
+  if client and type(client.position_encoding) == "string" and client.position_encoding ~= "" then
+    return client.position_encoding
+  end
+
+  return "utf-16"
+end
+
 local function get_lsp_signature(bufnr)
-  local params = vim.lsp.util.make_position_params(0)
+  local params = vim.lsp.util.make_position_params(0, get_position_encoding(bufnr, "textDocument/signatureHelp"))
   local responses = vim.lsp.buf_request_sync(bufnr, "textDocument/signatureHelp", params, 800)
   if type(responses) ~= "table" then
     return nil
@@ -293,7 +310,7 @@ local function normalize_location(item)
 end
 
 local function request_first_location(bufnr, method)
-  local params = vim.lsp.util.make_position_params(0)
+  local params = vim.lsp.util.make_position_params(0, get_position_encoding(bufnr, method))
   local responses = vim.lsp.buf_request_sync(bufnr, method, params, 1000)
   if type(responses) ~= "table" then
     return nil
@@ -738,6 +755,101 @@ local function scan_man_pages(sections)
   return results
 end
 
+local function get_man_search_sections(handler)
+  if type(handler) ~= "table" then
+    return { "1" }
+  end
+
+  if type(handler.search_sections) == "table" and #handler.search_sections > 0 then
+    return handler.search_sections
+  end
+
+  return { handler.search_section or "1" }
+end
+
+local function get_section_priority_map(sections)
+  local priority = {}
+  for index, section in ipairs(sections or {}) do
+    priority[tostring(section)] = index
+  end
+  return priority
+end
+
+local function compute_fuzzy_scores(pages, query)
+  local normalized_query = vim.trim(query or "")
+  if normalized_query == "" then
+    return {}
+  end
+
+  local displays = {}
+  for _, entry in ipairs(pages) do
+    displays[#displays + 1] = entry.display
+  end
+
+  local ok, result = pcall(vim.fn.matchfuzzypos, displays, normalized_query)
+  if not ok or type(result) ~= "table" then
+    return {}
+  end
+
+  local matched = result[1]
+  local scores = result[3]
+  if type(matched) ~= "table" or type(scores) ~= "table" then
+    return {}
+  end
+
+  local fuzzy_scores = {}
+  for idx, display in ipairs(matched) do
+    fuzzy_scores[display] = tonumber(scores[idx]) or 0
+  end
+  return fuzzy_scores
+end
+
+local function rank_man_pages(pages, opts)
+  local options = opts or {}
+  local raw_query = vim.trim(options.initial_query or "")
+  local query = raw_query:lower()
+  local section_priority = options.section_priority or {}
+  local prefer_exact = options.prefer_exact == true
+  local fuzzy_scores = compute_fuzzy_scores(pages, raw_query)
+
+  for _, entry in ipairs(pages) do
+    local name = (entry.name or ""):lower()
+    local section_key = tostring(entry.section or "")
+    local exact_rank = 0
+    local prefix_rank = 0
+
+    if query ~= "" and prefer_exact then
+      exact_rank = (name == query) and 0 or 1
+      prefix_rank = (name:sub(1, #query) == query) and 0 or 1
+    end
+
+    entry._rank_exact = exact_rank
+    entry._rank_prefix = prefix_rank
+    entry._rank_fuzzy_miss = (raw_query == "" or fuzzy_scores[entry.display]) and 0 or 1
+    entry._rank_fuzzy_score = fuzzy_scores[entry.display] or -math.huge
+    entry._rank_section = section_priority[section_key] or 999
+  end
+
+  table.sort(pages, function(a, b)
+    if a._rank_exact ~= b._rank_exact then
+      return a._rank_exact < b._rank_exact
+    end
+    if a._rank_prefix ~= b._rank_prefix then
+      return a._rank_prefix < b._rank_prefix
+    end
+    if a._rank_fuzzy_miss ~= b._rank_fuzzy_miss then
+      return a._rank_fuzzy_miss < b._rank_fuzzy_miss
+    end
+    if a._rank_fuzzy_score ~= b._rank_fuzzy_score then
+      return a._rank_fuzzy_score > b._rank_fuzzy_score
+    end
+    if a._rank_section ~= b._rank_section then
+      return a._rank_section < b._rank_section
+    end
+    return a.display < b.display
+  end)
+end
+
 function M.search_docs()
   local ft = vim.bo.filetype
   local handler = handlers[ft]
@@ -750,7 +862,12 @@ function M.search_docs()
   local mode = handler.search
 
   if mode == "man_pages" then
-    M.telescope_man_pages({ handler.search_section or "1" })
+    local sections = get_man_search_sections(handler)
+    M.telescope_man_pages(sections, {
+      initial_query = vim.fn.expand("<cword>"),
+      section_priority = get_section_priority_map(sections),
+      prefer_exact = true,
+    })
   elseif mode == "help_tags" then
     local ok, telescope = pcall(require, "telescope.builtin")
     if ok then telescope.help_tags() end
@@ -763,7 +880,7 @@ function M.search_docs()
   end
 end
 
-function M.telescope_man_pages(sections)
+function M.telescope_man_pages(sections, opts)
   local pickers = require("telescope.pickers")
   local finders = require("telescope.finders")
   local conf = require("telescope.config").values
@@ -776,15 +893,19 @@ function M.telescope_man_pages(sections)
     return
   end
 
+  local options = opts or {}
+  rank_man_pages(pages, options)
+
   pickers.new({}, {
     prompt_title = "Man Pages (" .. table.concat(sections, ", ") .. ")",
+    default_text = tostring(options.initial_query or ""),
     finder = finders.new_table({
       results = pages,
       entry_maker = function(entry)
         return {
           value = entry,
           display = entry.display,
-          ordinal = entry.display,
+          ordinal = (entry.name or "") .. " " .. entry.display,
         }
       end,
     }),

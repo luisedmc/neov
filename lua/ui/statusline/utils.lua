@@ -107,7 +107,7 @@ end
 function M.get_lsp_status()
   local clients = vim.lsp.get_clients({ bufnr = 0 })
   if #clients == 0 then
-    return { '', 'NO LSP', 'StLspOffIcon', 'StLspOffInfo' }
+    return { '', 'no lsp', 'StLspOffIcon', 'StLspOffInfo' }
   end
 
   for _, client in ipairs(clients) do

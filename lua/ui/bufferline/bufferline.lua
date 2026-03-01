@@ -1,8 +1,7 @@
 local M = {}
 local TAB_CELL_WIDTH = 24
-local TAB_ICON_WIDTH = 4
 local TAB_CLOSE_WIDTH = 5
-local TAB_TITLE_WIDTH = TAB_CELL_WIDTH - TAB_ICON_WIDTH - TAB_CLOSE_WIDTH
+local TAB_TITLE_WIDTH = TAB_CELL_WIDTH - TAB_CLOSE_WIDTH
 local pal = require("ui.colorschemes.palette")
 
 function M.set_highlights()
@@ -183,14 +182,12 @@ M.cell = function(index)
   local bufnr = buflist[winnr]
   local hl_group = is_selected and "TabLineSel" or "TabLineNorm"
   local raw_title = M.title(bufnr):gsub("^%s+", "")
-  local icon = fit_text_width(M.icon(bufnr), TAB_ICON_WIDTH)
   local title = fit_text_width(raw_title, TAB_TITLE_WIDTH)
 
   return string.format(
-    "%%#%s#%%%dT%s%s%s%%T",
+    "%%#%s#%%%dT%s%s%%T",
     hl_group,
     index,
-    icon,
     title,
     M.closeButton(index, is_selected)
   )

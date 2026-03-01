@@ -103,10 +103,10 @@ end
 
 local function get_no_git_label(width)
   if width >= 130 then
-    return "no git"
+    return "notgit"
   end
   if width >= 95 then
-    return "nogit"
+    return "notgit"
   end
   return "ng"
 end
@@ -244,7 +244,6 @@ function StatusLine()
 
   local file_data = utils.get_file_info()
   local file_width = width >= 150 and 34 or width >= 120 and 24 or width >= 95 and 16 or 12
-  add_block(left, icon_info_block("StFileIcon", "StFileInfo", file_data.icon, str_truncate(file_data.name, file_width)))
 
   local branch_data = utils.get_git_branch()
   local git_icon = (branch_data[1] or ""):gsub("%s+$", "")
@@ -263,6 +262,8 @@ function StatusLine()
     local lsp_width = width >= 140 and 20 or width >= 110 and 14 or 10
     add_block(right, icon_info_block(lsp_data[3], lsp_data[4], lsp_data[1], str_truncate(lsp_data[2], lsp_width)))
   end
+
+  add_block(right, icon_info_block("StFileIcon", "StFileInfo", file_data.icon, str_truncate(file_data.name, file_width)))
 
   add_block(right, icon_info_block("StPosIcon", "StPosInfo", "", utils.get_line_total()))
 

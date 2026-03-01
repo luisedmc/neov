@@ -1,8 +1,16 @@
-vim.g.barpos = "bottom"
-vim.g.barstyle = "floating"
+local config = {
+  bar = {
+    pos = vim.g.barpos or "bottom",
+    style = vim.g.barstyle or "floating",
+    show = vim.g.barshow ~= false,
+  },
+}
 
-if require("core.config").bar.show then
-  require("ui.statusline." .. vim.g.barstyle).init(vim.g.barpos)
+vim.g.barpos = config.bar.pos
+vim.g.barstyle = config.bar.style
+
+if config.bar.show then
+  require("ui.statusline." .. config.bar.style).init(config.bar.pos)
 else
   vim.opt.ls = 0
 end

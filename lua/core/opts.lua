@@ -6,6 +6,7 @@ local g   = vim.g
 g.loaded_python3_provider = 0
 
 opt.autoindent = true
+opt.autoread = true
 opt.background = "dark"
 opt.backup = false
 opt.writebackup = false

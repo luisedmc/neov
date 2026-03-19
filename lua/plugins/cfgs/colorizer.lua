@@ -14,6 +14,7 @@ require("colorizer").setup({
     tailwind = true,
     sass = { enable = false, parsers = { "css" } },
     virtualtext = "■",
+    suppress_deprecation = true,
   },
 })
 

@@ -50,12 +50,12 @@ end)
 
 -- documentation
 map("n", "gK", function() require("ui.docs.docs").open_doc() end)
-map("n", "<leader>fd", function() require("ui.docs.docs").search_docs() end)
+map("n", "<leader>fd", function() vim.schedule(function() require("ui.docs.docs").search_docs() end) end)
 map("n", "<leader>fs", function() require("ui.docs.docs").show_symbol_signature() end)
 
 -- toggle terminal
-map("n", "<C-`>", toggle_terminal)
-map("t", "<C-`>", function()
+map("n", "<C-j>", toggle_terminal)
+map("t", "<C-j>", function()
   vim.cmd("stopinsert")
   toggle_terminal()
 end)
@@ -74,18 +74,14 @@ map({ "n", "v" }, "<leader>wh", "<C-w>s")
 map({ "n", "v" }, "<leader>we", "<C-w>=")
 map({ "n", "v" }, "<leader>wq", "<cmd>close<cr>")
 
-map({ "n", "t" }, "<C-h>", "<C-w>h")
-map({ "n", "t" }, "<C-j>", "<C-w>j")
-map({ "n", "t" }, "<C-k>", "<C-w>k")
-map({ "n", "t" }, "<C-l>", "<C-w>l")
 
 map("t", "<esc>", [[<C-\><C-n>]])
 
 -- move line
-map("n", "<D-j>", ":m +1<CR>==")
-map("n", "<D-k>", ":m -2<CR>==")
-map("i", "<D-j>", "<Esc>:m +1<CR>==gi")
-map("i", "<D-k>", "<Esc>:m -2<CR>==gi")
+map("n", "<D-j>", "<cmd>m +1<cr>==")
+map("n", "<D-k>", "<cmd>m -2<cr>==")
+map("i", "<D-j>", "<esc><cmd>m +1<cr>==gi")
+map("i", "<D-k>", "<esc><cmd>m -2<cr>==gi")
 
 -- move block
 map("v", "<D-j>", ":m '>+1<CR>gv=gv")

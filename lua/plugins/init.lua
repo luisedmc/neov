@@ -153,39 +153,6 @@ return {
 		end,
 	},
 	{
-		"nickjvandyke/opencode.nvim",
-		version = "*",
-		keys = {
-			{
-				"<leader>oa",
-				function()
-					require("opencode").ask("@this: ", { submit = true })
-				end,
-				mode = { "n", "x" },
-				desc = "OpenCode: Ask",
-			},
-			{
-				"<leader>os",
-				function()
-					require("opencode").select()
-				end,
-				mode = { "n", "x" },
-				desc = "OpenCode: Select",
-			},
-			{
-				"<leader>oo",
-				function()
-					require("opencode").toggle()
-				end,
-				mode = { "n", "t" },
-				desc = "OpenCode: Toggle",
-			},
-		},
-		init = function()
-			vim.g.opencode_opts = vim.g.opencode_opts or {}
-		end,
-	},
-	{
 		"lewis6991/gitsigns.nvim",
 		event = { "BufRead" },
 		config = function()

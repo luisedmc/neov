@@ -272,10 +272,8 @@ local function on_lsp_attach(event)
 		})
 	end
 
-	local inlay_hint_method = vim.lsp.protocol.Methods and vim.lsp.protocol.Methods.textDocument_inlayHint
-		or "textDocument/inlayHint"
-	if client and vim.lsp.inlay_hint and client:supports_method(inlay_hint_method) then
-		pcall(vim.lsp.inlay_hint.enable, true, { bufnr = event.buf })
+	if vim.lsp.inlay_hint then
+		pcall(vim.lsp.inlay_hint.enable, false, { bufnr = event.buf })
 	end
 end
 

@@ -15,6 +15,7 @@ return {
 		"html",
 		"css",
 		"markdown",
+		"swift",
 	},
 	sync_install = false,
 	auto_install = true,

@@ -77,26 +77,6 @@ return {
 		end,
 	},
 	pyright = {},
-	sourcekit = {
-		cmd = { "sourcekit-lsp" },
-		filetypes = { "swift" },
-		root_markers = { "Package.swift", "compile_commands.json", ".git" },
-	},
-	rust_analyzer = {
-		settings = {
-			["rust-analyzer"] = {
-				cargo = {
-					allFeatures = true,
-				},
-				checkOnSave = {
-					command = "clippy",
-				},
-				procMacro = {
-					enable = true,
-				},
-			},
-		},
-	},
 	ts_ls = {
 		filetypes = {
 			"javascript",

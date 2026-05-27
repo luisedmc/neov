@@ -10,7 +10,6 @@ local handlers = {
   go      = { cmd = "go doc %s",     ft = "go",   search = "go_doc" },
   python  = { cmd = "pydoc %s",      ft = "text", search = "pydoc" },
   lua     = { cmd = "vim_help",      ft = "help", search = "help_tags" },
-  rust    = { cmd = "rustup doc --std %s", ft = "text", search = "man_pages", browser = true },
   nix     = { cmd = "man",  sections = { "5", "1" },      ft = "man",  search = "man_pages", search_section = "5" },
   php     = { cmd = "man",  sections = { "3", "1" },      ft = "man",  search = "man_pages", search_section = "3" },
 }
